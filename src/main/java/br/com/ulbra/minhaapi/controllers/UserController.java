@@ -1,9 +1,6 @@
 package br.com.ulbra.minhaapi.controllers;
 import br.com.ulbra.minhaapi.models.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +27,30 @@ public class UserController {
     public User listaUsuario(@PathVariable int id){
        return  users.stream().filter(item->item.getId()== id).findFirst().orElseThrow();
 
+    }
+    @PostMapping
+    public User criarNovoUsuario(@RequestBody User user){
+        this.users.add(user);
+        return user;
+    }
+    @DeleteMapping("/{id}")
+    public void deletarUsuario(@PathVariable int id){
+        User userFiltrado = users.stream().filter(item->item.getId()== id).findFirst().orElseThrow();
+        users.remove(userFiltrado);
+    }
+
+    @PutMapping("/{id}")
+    public User alterarUsuario(@RequestBody User userRequest, @PathVariable int id){
+        User userFiltrado = users.stream().filter(item->item.getId()== id).findFirst().orElseThrow();
+        users.remove(userFiltrado);
+
+
+        userRequest.setId(userFiltrado.getId());
+        int index = users.indexOf(userFiltrado);
+
+        users.set(index, userRequest);
+
+        return userRequest;
     }
 
 }
